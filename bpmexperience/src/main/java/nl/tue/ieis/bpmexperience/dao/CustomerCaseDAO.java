@@ -18,8 +18,14 @@ public class CustomerCaseDAO{
 	private EntityManager em;
 
 	@Transactional
-	public void save(CustomerCase customerCase){
-		em.persist(customerCase);
+	public void insertOrUpdate(CustomerCase newCustomerCase){
+		if (newCustomerCase.getId() != null){
+			CustomerCase oldCustomerCase = em.find(CustomerCase.class, newCustomerCase.getId());
+			newCustomerCase = Updater.update(oldCustomerCase, newCustomerCase);
+			em.merge(newCustomerCase);
+		}else{
+			em.persist(newCustomerCase);
+		}
 	}
 
 	@Transactional
@@ -34,4 +40,14 @@ public class CustomerCaseDAO{
         return query.getResultList();
 	}
 	
+	public CustomerCase find(Long id){
+		return em.find(CustomerCase.class, id);
+	}
+	
+	public List<CustomerCase> listOneHundredNotDoneUnreserved(){
+        TypedQuery<CustomerCase> query = em.createQuery(
+        		"SELECT cc FROM CustomerCase cc WHERE cc.reserved <> true AND cc.nextTask <> '" + CustomerCase.TASK_DONE + "' ORDER BY cc.id", CustomerCase.class);
+        query.setMaxResults(100);
+        return query.getResultList();		
+	}	
 }
