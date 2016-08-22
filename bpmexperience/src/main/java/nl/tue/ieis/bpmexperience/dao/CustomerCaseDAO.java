@@ -18,13 +18,13 @@ public class CustomerCaseDAO{
 	private EntityManager em;
 
 	@Transactional
-	public void insertOrUpdate(CustomerCase newCustomerCase){
-		if (newCustomerCase.getId() != null){
-			CustomerCase oldCustomerCase = em.find(CustomerCase.class, newCustomerCase.getId());
-			newCustomerCase = Updater.update(oldCustomerCase, newCustomerCase);
-			em.merge(newCustomerCase);
+	public void insertOrUpdate(CustomerCase customerCase){
+		if (customerCase.getId() != null){
+			CustomerCase oldCustomerCase = em.find(CustomerCase.class, customerCase.getId());
+			customerCase = Updater.update(oldCustomerCase, customerCase);
+			em.merge(customerCase);
 		}else{
-			em.persist(newCustomerCase);
+			em.persist(customerCase);
 		}
 	}
 

@@ -6,6 +6,7 @@
 <title>BPM Experience</title>
 
 <link href="<c:url value="/resources/bootstrap/css/bootstrap.min.css" />" rel="stylesheet">
+<link href="<c:url value="/resources/bootstrap/css/bootstrap-dialog.min.css" />" rel="stylesheet">
 <link href="<c:url value="/resources/css/site.css" />" rel="stylesheet">
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -17,6 +18,7 @@
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script src="<c:url value="/resources/bootstrap/js/bootstrap.min.js" />"></script>
+<script src="<c:url value="/resources/bootstrap/js/bootstrap-dialog.min.js" />"></script>
 </head>
 
 <%@ page import="java.io.*,java.util.*,java.lang.Math"%>

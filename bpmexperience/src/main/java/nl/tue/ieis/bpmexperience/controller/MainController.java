@@ -58,10 +58,23 @@ public class MainController {
 
 	@RequestMapping(value = "/edit/{customerCaseId}", method = RequestMethod.GET)
 	public String editCustomerCase(@PathVariable("customerCaseId") Long customerCaseId, Model model) {
+		CustomerCase cc = customerCaseDAO.find(customerCaseId);
+
+		if (cc.getReserved()){
+			model.addAttribute("title", "Task taken");
+			model.addAttribute("message", "The task that you selected was already picked up by someone else. Appologies for the inconvenience.");
+			model.addAttribute("redirect", "/");
+			
+			return "message";			
+		}else{
+			cc.setReserved(true);
+			
+			customerCaseDAO.insertOrUpdate(cc);
+			
+			model.addAttribute("customerCase", cc);
 		
-		model.addAttribute("customerCase", customerCaseDAO.find(customerCaseId));
-		
-		return "editcase";
+			return "editcase";
+		}
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.POST)

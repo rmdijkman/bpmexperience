@@ -34,6 +34,10 @@
 			</tbody>
 		</table>
 	</div>
-
 </body>
+<script>
+	if (('${title}' != null) && ('${title}' != '')){
+		BootstrapDialog.alert({title: '${title}', message: '${message}'});
+	}
+</script>
 </html>
