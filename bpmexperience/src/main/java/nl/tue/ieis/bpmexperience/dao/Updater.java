@@ -1,6 +1,7 @@
 package nl.tue.ieis.bpmexperience.dao;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Hashtable;
 
 public class Updater {
@@ -14,17 +15,19 @@ public class Updater {
 		Field[] oldEntityFields = oldEntityClass.getDeclaredFields();
 
 		for (Field field : oldEntityFields){
-			field.setAccessible(true);
-			Object o = newHT.get(field.getName());
-			if (o != null){
-				try {
-					Field f = oldEntityClass.getDeclaredField(field.getName());
-					f.setAccessible(true);
-					f.set(oldEntity, o);
-				} catch (IllegalAccessException e) {
-					e.printStackTrace();
-				} catch (NoSuchFieldException e) {
-					e.printStackTrace();
+			if (!Modifier.isFinal(field.getModifiers())){
+				field.setAccessible(true);
+				Object o = newHT.get(field.getName());
+				if (o != null){
+					try {
+						Field f = oldEntityClass.getDeclaredField(field.getName());
+						f.setAccessible(true);
+						f.set(oldEntity, o);
+					} catch (IllegalAccessException e) {
+						e.printStackTrace();
+					} catch (NoSuchFieldException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 

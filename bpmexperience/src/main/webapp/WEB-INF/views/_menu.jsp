@@ -16,6 +16,9 @@
 				<li><a href="<c:url value="/" />">Home</a></li>
 				<li><a href="<c:url value="/help" />">Help</a></li>
 			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="<c:url value="/log" />">Log</a></li>
+			</ul>
 		</div>
 		<!--/.nav-collapse -->
 	</div>

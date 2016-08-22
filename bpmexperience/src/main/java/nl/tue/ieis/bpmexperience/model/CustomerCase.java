@@ -7,21 +7,31 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table
 public class CustomerCase implements Serializable{
 
+	@Transient
 	private static final long serialVersionUID = -9217446621833225765L;
 	
+	@Transient
 	public static final String TASK_COMPUTE_RISK = "Compute risk";
+	@Transient
 	public static final String TASK_TAKE_DECISION = "Take decision"; 
+	@Transient
 	public static final String TASK_APPROVE_DECISION = "Approve decision"; 
+	@Transient
 	public static final String TASK_WRITE_ACCEPTANCE_LETTER = "Write acceptance letter"; 
+	@Transient
 	public static final String TASK_WRITE_REJECTION_LETTER = "Write rejection letter";
+	@Transient
 	public static final String TASK_DONE = "Done";
+	@Transient
 	public static final String[] allTasks = {TASK_COMPUTE_RISK,TASK_TAKE_DECISION, TASK_APPROVE_DECISION, TASK_WRITE_ACCEPTANCE_LETTER, TASK_WRITE_REJECTION_LETTER, TASK_DONE};
 	
+	//Preset case variables
 	@Id
     @GeneratedValue
 	private Long id;
@@ -44,25 +54,31 @@ public class CustomerCase implements Serializable{
 	@Column
 	private Integer yearBuilt;
 	@Column
-	private Integer age;		
-	@Column
+	private Integer age;
+	
+	//Variable case variables
+	@Column(nullable = false, columnDefinition = "integer default 0")
 	private Integer riskEstimate;		
-	@Column
+	@Column(nullable = false, columnDefinition = "text default ''")
 	private String payoutRate;
-	@Column
+	@Column(nullable = false, columnDefinition = "integer default 0")
 	private Integer approvalState;
-	@Column
+	@Column(nullable = false, columnDefinition = "boolean default false")
 	private Boolean requiresSecondary;
-	@Column
+	@Column(nullable = false, columnDefinition = "text default ''")
 	private String reason; 
-	@Column
+	@Column(nullable = false, columnDefinition = "text default ''")
 	private String acceptanceLetter;		
-	@Column
+	@Column(nullable = false, columnDefinition = "text default ''")
 	private String rejectionLetter;
+	
+	//Case state variables
 	@Column(nullable = false, columnDefinition = "varchar(255) default 'Compute risk'")
 	private String nextTask; 
 	@Column(nullable = false, columnDefinition = "boolean default false")
 	private Boolean reserved; 
+	@Column
+	private String reservedBy; 
 
 	public CustomerCase() {
 	}	
@@ -189,5 +205,41 @@ public class CustomerCase implements Serializable{
 	public void setReserved(Boolean reserved) {
 		this.reserved = reserved;
 	}
+	public String getReservedBy() {
+		return reservedBy;
+	}
+	public void setReservedBy(String reservedBy) {
+		this.reservedBy = reservedBy;
+	}
 	
+	public String determineNextTask(){
+		if (getNextTask().equals(TASK_COMPUTE_RISK)){
+			return TASK_TAKE_DECISION;
+		}else if (getNextTask().equals(TASK_TAKE_DECISION)){
+			if (getRequiresSecondary()){
+				return TASK_APPROVE_DECISION;
+			}else{
+				if (getApprovalState() == 0){
+					return TASK_TAKE_DECISION;
+				}else if (getApprovalState() == 1){
+					return TASK_WRITE_ACCEPTANCE_LETTER;
+				}else{
+					return TASK_WRITE_REJECTION_LETTER;					
+				}
+			}
+		}else if (getNextTask().equals(TASK_APPROVE_DECISION)){
+			if (getApprovalState() == 0){
+				return TASK_APPROVE_DECISION;
+			}else if (getApprovalState() == 1){
+				return TASK_WRITE_ACCEPTANCE_LETTER;
+			}else{
+				return TASK_WRITE_REJECTION_LETTER;					
+			}			
+		}else if (getNextTask().equals(TASK_WRITE_ACCEPTANCE_LETTER)){
+			return TASK_DONE;
+		}else if (getNextTask().equals(TASK_WRITE_REJECTION_LETTER)){
+			return TASK_DONE;			
+		}
+		return TASK_DONE;		
+	}
 }
