@@ -25,5 +25,14 @@
 		<servlet-name>dispatcher</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
-
+	
+	<taglib>
+		<taglib-uri>/tags/spring</taglib-uri>
+		<taglib-location>/WEB-INF/lib/spring.tld</taglib-location>
+	</taglib>
+	
+	<taglib>
+		<taglib-uri>/tags/form</taglib-uri>
+		<taglib-location>/WEB-INF/lib/spring-form.tld</taglib-location>
+	</taglib>
 </web-app>
